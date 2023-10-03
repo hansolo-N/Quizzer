@@ -1,12 +1,11 @@
 import React from 'react'
 
 
-function Main() {
+function Main({children} ) {
 
   return (
     <main className="main">
-    <p>1/15</p>
-    <p>question</p>
+      {children}
   </main>
   )
 }
