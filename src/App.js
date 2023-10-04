@@ -4,12 +4,14 @@ import Main from "./Main"
 import Loader from "./Loader"
 import Error from "./Error"
 import StartQuiz from "./StartQuiz"
+import Question from './Question'
 
 const intialState = {
   questions:[],
 
   //loading active error ready finished 
-  status: 'loading'
+  status: 'loading',
+  index:0
 }
 
 
@@ -20,7 +22,9 @@ function reducer(state,action){
       case "dataRecieved":
           return {...state,questions:action.payload,status:"ready"}
       case "dataFailed":
-          return {...state,status:"error"}    
+          return {...state,status:"error"}
+      case "setActive":
+          return {...state,status:"active"}     
       default:
         throw new Error("unknown case")
 
@@ -31,7 +35,7 @@ function reducer(state,action){
 
 
 export default function App(){
-  const [{questions,status},dispatch] = useReducer(reducer,intialState)
+  const [{questions,status,index},dispatch] = useReducer(reducer,intialState)
 
   const numQuestions = questions.length
 
@@ -58,7 +62,8 @@ return(
       <Main>
         {status ==="loading" && <Loader/>}
         {status ==="error" && <Error/>}
-        {status === "ready" && <StartQuiz numQuestions = {numQuestions} />}
+        {status === "ready" && <StartQuiz numQuestions = {numQuestions} setActive={dispatch({type:"setActive"})}/>}
+        {status=== "active" && <Question question={questions[index]}/>}
       </Main>
     </div>
   ) 
