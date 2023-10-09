@@ -7,6 +7,7 @@ import StartQuiz from "./components/StartQuiz"
 import Question from './components/Question'
 import NextQuestion from './components/NextQuestion'
 import Progress from './components/Progress'
+import FinishedScreen from './components/FinishedScreen'
 
 const intialState = {
   questions:[],
@@ -15,7 +16,8 @@ const intialState = {
   status: 'loading',
   index:0,
   answer: null,
-  points: 0
+  points: 0,
+  highScore: 0
 }
 
 
@@ -38,7 +40,10 @@ function reducer(state,action){
             state.points + question.points: state.points
           }
       case "nextQuestion":
-        return   {...state,index:state.index+1,answer:null}   
+        return   {...state,index:state.index+1,answer:null}
+        
+      case "finished":
+        return {...state,status:"finished",highscore:state.points > state.highscore ? state.points: state.highscore}
       default:
         throw new Error("unknown case")
 
@@ -49,7 +54,7 @@ function reducer(state,action){
 
 
 export default function App(){
-  const [{questions,status,index,answer,points},dispatch] = useReducer(reducer,intialState)
+  const [{questions,status,index,answer,points,highscore},dispatch] = useReducer(reducer,intialState)
 
   const numQuestions = questions.length
 
@@ -83,11 +88,12 @@ return(
           <>
           <Progress numQuestions = {numQuestions} index={index} points={points} maxPoints={maxAnswerPoints} answer={answer}/>
          <Question question={questions[index]} dispatch={dispatch} answer={answer}/>
-         {<NextQuestion dispatch = {dispatch} answer={answer}/>}
+         {<NextQuestion dispatch = {dispatch} answer={answer} index={index} numQuestions={numQuestions}/>}
          
 
           </>
-)}
+        )}
+        {status ==="finished" && <FinishedScreen points={points} maxPoints={maxAnswerPoints} highscore={highscore}/>}
       </Main>
     </div>
   ) 
