@@ -3,7 +3,8 @@ import { useEffect } from 'react'
 
 
 function Timer({dispatch,timeRemaining }) {
-
+    const mins = Math.floor(timeRemaining/60)
+    const seconds = timeRemaining % 60
 useEffect(function(){
     const id = setInterval(function(){
         dispatch({type:"timer"})
@@ -15,7 +16,12 @@ useEffect(function(){
 },[dispatch])
 
   return (
-    <div className='timer'>{timeRemaining}</div>
+
+    <div className='timer'>
+        {mins < 10 && "0"}
+        {mins}:{seconds < 10 && "0"}
+        {seconds}
+    </div>
   )
 }
 

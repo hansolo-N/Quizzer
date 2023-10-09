@@ -20,9 +20,10 @@ const intialState = {
   answer: null,
   points: 0,
   highScore: 0,
-  timeRemaining: 10
+  timeRemaining: null
 }
 
+const secs_per_question = 30
 
 function reducer(state,action){
 
@@ -33,7 +34,7 @@ function reducer(state,action){
       case "dataFailed":
           return {...state,status:"error"}
       case "setActive":
-          return {...state,status:"active"}
+          return {...state,status:"active",timeRemaining:state.questions.length*secs_per_question}
       case "newAnswer":
         const question = state.questions.at(state.index)
           return {
