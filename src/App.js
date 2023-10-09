@@ -8,6 +8,8 @@ import Question from './components/Question'
 import NextQuestion from './components/NextQuestion'
 import Progress from './components/Progress'
 import FinishedScreen from './components/FinishedScreen'
+import Footer from './components/Footer'
+import Timer from './components/Timer'
 
 const intialState = {
   questions:[],
@@ -17,7 +19,8 @@ const intialState = {
   index:0,
   answer: null,
   points: 0,
-  highScore: 0
+  highScore: 0,
+  timeRemaining: 10
 }
 
 
@@ -47,6 +50,10 @@ function reducer(state,action){
 
       case "reset":
         return {intialState,questions:state.questions,status:"ready"}
+
+      case "timer":
+        return   {...state,timeRemaining:state.timeRemaining -1,
+        status: state.timeRemaining ===0? "finished": state.status}
       default:
         throw new Error("unknown case")
 
@@ -57,7 +64,7 @@ function reducer(state,action){
 
 
 export default function App(){
-  const [{questions,status,index,answer,points,highscore},dispatch] = useReducer(reducer,intialState)
+  const [{questions,status,index,answer,points,highscore,timeRemaining},dispatch] = useReducer(reducer,intialState)
 
   const numQuestions = questions.length
 
@@ -90,10 +97,13 @@ return(
         {status=== "active" && (
           <>
           <Progress numQuestions = {numQuestions} index={index} points={points} maxPoints={maxAnswerPoints} answer={answer}/>
-         <Question question={questions[index]} dispatch={dispatch} answer={answer}/>
-         {<NextQuestion dispatch = {dispatch} answer={answer} index={index} numQuestions={numQuestions}/>}
+          <Question question={questions[index]} dispatch={dispatch} answer={answer}/>
+          <Footer>
+            <Timer timeRemaining={timeRemaining} dispatch={dispatch}/>
+            <NextQuestion dispatch = {dispatch} answer={answer} index={index} numQuestions={numQuestions}/>
+          </Footer>
          
-
+         
           </>
         )}
         {status ==="finished" && <FinishedScreen points={points} maxPoints={maxAnswerPoints} highscore={highscore} dispatch={dispatch}/>}
