@@ -5,6 +5,7 @@ import Loader from "./components/Loader"
 import Error from "./components/Error"
 import StartQuiz from "./components/StartQuiz"
 import Question from './components/Question'
+import NextQuestion from './components/NextQuestion'
 
 const intialState = {
   questions:[],
@@ -34,7 +35,9 @@ function reducer(state,action){
             answer:action.payload,
             points: action.payload === question.correctOption? 
             state.points + question.points: state.points
-          }      
+          }
+      case "nextQuestion":
+        return   {...state,index:state.index+1,answer:null}   
       default:
         throw new Error("unknown case")
 
@@ -73,7 +76,14 @@ return(
         {status ==="loading" && <Loader/>}
         {status ==="error" && <Error/>}
         {status === "ready" && <StartQuiz numQuestions = {numQuestions}  dispatch={dispatch}/>}
-        {status=== "active" && <Question question={questions[index]} dispatch={dispatch} answer={answer}/>}
+        {status=== "active" && (
+          <>
+         <Question question={questions[index]} dispatch={dispatch} answer={answer}/>
+         {<NextQuestion dispatch = {dispatch} answer={answer}/>}
+         
+
+          </>
+)}
       </Main>
     </div>
   ) 
