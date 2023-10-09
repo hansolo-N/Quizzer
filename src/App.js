@@ -6,6 +6,7 @@ import Error from "./components/Error"
 import StartQuiz from "./components/StartQuiz"
 import Question from './components/Question'
 import NextQuestion from './components/NextQuestion'
+import Progress from './components/Progress'
 
 const intialState = {
   questions:[],
@@ -48,9 +49,11 @@ function reducer(state,action){
 
 
 export default function App(){
-  const [{questions,status,index,answer},dispatch] = useReducer(reducer,intialState)
+  const [{questions,status,index,answer,points},dispatch] = useReducer(reducer,intialState)
 
   const numQuestions = questions.length
+
+  const maxAnswerPoints = questions.reduce((prev,curr)=>prev + curr.points,0)
 
   useEffect(function(){
       async function fetchQuestions(){
@@ -78,6 +81,7 @@ return(
         {status === "ready" && <StartQuiz numQuestions = {numQuestions}  dispatch={dispatch}/>}
         {status=== "active" && (
           <>
+          <Progress numQuestions = {numQuestions} index={index} points={points} maxPoints={maxAnswerPoints} answer={answer}/>
          <Question question={questions[index]} dispatch={dispatch} answer={answer}/>
          {<NextQuestion dispatch = {dispatch} answer={answer}/>}
          
