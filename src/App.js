@@ -43,7 +43,10 @@ function reducer(state,action){
         return   {...state,index:state.index+1,answer:null}
         
       case "finished":
-        return {...state,status:"finished",highscore:state.points > state.highscore ? state.points: state.highscore}
+        return {...state,status:"finished",highscore: state.points > state.highscore ? state.points: state.highscore}
+
+      case "reset":
+        return {intialState,questions:state.questions,status:"ready"}
       default:
         throw new Error("unknown case")
 
@@ -93,7 +96,7 @@ return(
 
           </>
         )}
-        {status ==="finished" && <FinishedScreen points={points} maxPoints={maxAnswerPoints} highscore={highscore}/>}
+        {status ==="finished" && <FinishedScreen points={points} maxPoints={maxAnswerPoints} highscore={highscore} dispatch={dispatch}/>}
       </Main>
     </div>
   ) 
